@@ -1,0 +1,73 @@
+From fa4db077118365e3500b50295366f7a3ddde514c Mon Sep 17 00:00:00 2001
+From: Darryl Merritt <djm2020@djmnet.net.au>
+Date: Fri, 8 Apr 2022 10:38:05 +0930
+Subject: [PATCH 1/2] Commit the branch feat_wrap1.1
+
+---
+ ProductMaintenance/ProductApps/MainWindow.xaml    |  6 ++++--
+ ProductMaintenance/ProductApps/MainWindow.xaml.cs | 14 ++++++++++++--
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/ProductMaintenance/ProductApps/MainWindow.xaml b/ProductMaintenance/ProductApps/MainWindow.xaml
+index 98f3040..15a328e 100644
+--- a/ProductMaintenance/ProductApps/MainWindow.xaml
++++ b/ProductMaintenance/ProductApps/MainWindow.xaml
+@@ -14,8 +14,10 @@
+         <Button Name="calculateButton" Content="_Calculate" HorizontalAlignment="Left" Height="37" Margin="327,152,0,0" VerticalAlignment="Top" Width="122" Click="calculateButton_Click"/>
+         <Button Name="clearButton" Content="C_lear" HorizontalAlignment="Left" Height="34" Margin="327,209,0,0" VerticalAlignment="Top" Width="122" Click="clearButton_Click"/>
+         <Button Name="closeButton" Content="Cl_ose" HorizontalAlignment="Left" Height="34" Margin="327,264,0,0" VerticalAlignment="Top" Width="122" Click="closeButton_Click"/>
+-        <Label x:Name="TotalChargeLabel" Content="Total Charge after adding &#xA;the delivery charge ($25)&#x9;" HorizontalAlignment="Left" Margin="30,209,0,0" VerticalAlignment="Top" Width="149" Height="45"/>
+-        <TextBox x:Name="totalChargeTextBlock" HorizontalAlignment="Left" Height="23" Margin="184,213,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96"/>
++        <Label x:Name="TotalChargeLabel" Content="Total Charge after adding &#xA;the delivery charge ($25)&#x9;" HorizontalAlignment="Left" Margin="30,198,0,0" VerticalAlignment="Top" Width="149" Height="45"/>
++        <TextBox x:Name="totalChargeTextBlock" HorizontalAlignment="Left" Height="23" Margin="184,209,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" TextChanged="totalChargeTextBlock_TextChanged"/>
++        <Label x:Name="TotalChargeWrapLabel" Content="Total Charge after adding &#xA;the wrap charge ($5)&#x9;" HorizontalAlignment="Left" Margin="30,256,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.116,0.01" Width="149"/>
++        <TextBox x:Name="totalChargeWrapTextBlock" HorizontalAlignment="Left" Height="23" Margin="184,264,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
+ 
+ 
+     </Grid>
+diff --git a/ProductMaintenance/ProductApps/MainWindow.xaml.cs b/ProductMaintenance/ProductApps/MainWindow.xaml.cs
+index a7b6aab..a01603b 100644
+--- a/ProductMaintenance/ProductApps/MainWindow.xaml.cs
++++ b/ProductMaintenance/ProductApps/MainWindow.xaml.cs
+@@ -29,14 +29,17 @@ namespace ProductApps
+ 
+         private void calculateButton_Click(object sender, RoutedEventArgs e)
+         {
++            decimal runningTotal = 0;
+             try
+             {
+                 cProduct = new Product(Convert.ToDecimal(priceTextBox.Text), Convert.ToInt16(quantityTextBox.Text));
+                 cProduct.calTotalPayment();
+                 totalPaymentTextBlock.Text = Convert.ToString(cProduct.TotalPayment);
+ 
+-                totalChargeTextBlock.Text = (cProduct.TotalPayment + 25.00m).ToString();
+-
++                runningTotal = cProduct.TotalPayment + 25.00m;
++                totalChargeTextBlock.Text = (runningTotal).ToString();
++                runningTotal += 5.00m;
++                totalChargeWrapTextBlock.Text = (runningTotal).ToString();
+ 
+             }
+             catch (FormatException)
+@@ -51,11 +54,18 @@ namespace ProductApps
+             priceTextBox.Text = "";
+             quantityTextBox.Text = "";
+             totalPaymentTextBlock.Text = "";
++            totalChargeTextBlock.Text = "";
++            totalChargeWrapTextBlock.Text = "";
+         }
+ 
+         private void closeButton_Click(object sender, RoutedEventArgs e)
+         {
+             this.Close();
+         }
++
++        private void totalChargeTextBlock_TextChanged(object sender, TextChangedEventArgs e)
++        {
++
++        }
+     }
+ }
+-- 
+2.35.1.windows.2
+
