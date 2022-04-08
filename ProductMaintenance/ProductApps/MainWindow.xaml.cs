@@ -29,14 +29,17 @@ namespace ProductApps
 
         private void calculateButton_Click(object sender, RoutedEventArgs e)
         {
+            decimal runningTotal = 0;
             try
             {
                 cProduct = new Product(Convert.ToDecimal(priceTextBox.Text), Convert.ToInt16(quantityTextBox.Text));
                 cProduct.calTotalPayment();
                 totalPaymentTextBlock.Text = Convert.ToString(cProduct.TotalPayment);
 
-                totalChargeTextBlock.Text = (cProduct.TotalPayment + 25.00m).ToString();
-
+                runningTotal = cProduct.TotalPayment + 25.00m;
+                totalChargeTextBlock.Text = (runningTotal).ToString();
+                runningTotal += 5.00m;
+                totalChargeWrapTextBlock.Text = (runningTotal).ToString();
 
             }
             catch (FormatException)
@@ -51,11 +54,18 @@ namespace ProductApps
             priceTextBox.Text = "";
             quantityTextBox.Text = "";
             totalPaymentTextBlock.Text = "";
+            totalChargeTextBlock.Text = "";
+            totalChargeWrapTextBlock.Text = "";
         }
 
         private void closeButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void totalChargeTextBlock_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
